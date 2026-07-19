@@ -1,0 +1,78 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 260 260"
+  role="img"
+  aria-label="StayToned"
+  shape-rendering="geometricPrecision"
+>
+  <defs>
+    <linearGradient id="red" x1="39" y1="21" x2="223" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF3437" />
+      <stop offset="1" stop-color="#F0272F" />
+    </linearGradient>
+    <linearGradient id="orange" x1="72" y1="47" x2="176" y2="222" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF9700" />
+      <stop offset="1" stop-color="#F47B00" />
+    </linearGradient>
+    <linearGradient id="green" x1="83" y1="67" x2="204" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#27C24E" />
+      <stop offset="1" stop-color="#17A943" />
+    </linearGradient>
+    <filter id="ring-shadow" x="-12%" y="-12%" width="124%" height="130%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="2.4" stdDeviation="2.2" flood-color="#12213D" flood-opacity="0.10" />
+    </filter>
+    <filter id="letter-shadow" x="-30%" y="-25%" width="160%" height="165%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" flood-color="#111827" flood-opacity="0.20" />
+    </filter>
+  </defs>
+
+  <circle
+    cx="130"
+    cy="130"
+    r="120"
+    fill="none"
+    stroke="url(#red)"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-dasharray="591.876 162.106"
+    transform="rotate(98 130 130)"
+    filter="url(#ring-shadow)"
+  />
+
+  <g fill="none" stroke-width="16" stroke-linecap="round" filter="url(#ring-shadow)">
+    <circle
+      cx="130"
+      cy="130"
+      r="97"
+      stroke="url(#orange)"
+      stroke-dasharray="507.688 101.781"
+      transform="rotate(345 130 130)"
+    />
+  </g>
+
+  <g fill="none" stroke-width="16" stroke-linecap="round" filter="url(#ring-shadow)">
+    <circle
+      cx="130"
+      cy="130"
+      r="74"
+      stroke="url(#green)"
+      stroke-dasharray="199.931 265.025"
+      transform="rotate(118 130 130)"
+    />
+    <circle
+      cx="130"
+      cy="130"
+      r="74"
+      stroke="url(#green)"
+      stroke-dasharray="125.538 339.418"
+      transform="rotate(18 130 130)"
+    />
+  </g>
+
+  <path
+    d="M 95 106 H 165 Q 169 106 169 110 V 118 Q 169 122 165 122 H 141 V 175 Q 141 180 136 180 H 124 Q 119 180 119 175 V 122 H 95 Q 91 122 91 118 V 110 Q 91 106 95 106 Z"
+    fill="#007AFF"
+    transform="translate(-13 -18.3) scale(1.1)"
+    filter="url(#letter-shadow)"
+  />
+</svg>
