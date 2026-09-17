@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Science and accuracy — StayToned</title>
+    <meta
+      name="description"
+      content="How StayToned calculates daily calorie and macro targets, scales nutrition per ingredient, and treats AI photo estimates as editable guesses — with the formulas, values, and accuracy limits."
+    />
+    <meta property="og:title" content="Science and accuracy — StayToned" />
+    <meta
+      property="og:description"
+      content="The published equations behind StayToned targets, the math that scales each ingredient, and an honest account of what AI meal estimates can and cannot measure."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://staytoned.farnood.tech/science/" />
+    <meta property="og:image" content="https://staytoned.farnood.tech/assets/images/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="StayToned — Easy macro logging with AI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://staytoned.farnood.tech/assets/images/og-image.png" />
+    <link rel="canonical" href="https://staytoned.farnood.tech/science/" />
+    <link rel="icon" href="../assets/images/icon-glyph.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/site.css" />
+    <script src="../assets/js/theme.js"></script>
+  </head>
+  <body class="science-page">
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="../">
+          <img class="brand-mark" src="../assets/images/icon-glyph.svg" alt="" width="44" height="44" />
+          <span class="brand-name">StayToned</span>
+        </a>
+        <nav class="site-nav" aria-label="Site">
+          <a href="../">Home</a>
+          <a href="./" aria-current="page">Science</a>
+          <a href="../policy/">Privacy policy</a>
+          <a href="../terms/">Terms of Use</a>
+          <a href="../contact/">Contact</a>
+          <button class="theme-toggle" type="button" aria-label="Switch between light and dark mode">
+            <svg class="when-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            <svg class="when-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          </button>
+        </nav>
+      </header>
+
+      <main class="science-layout">
+        <article class="policy-card">
+          <h1>Science and accuracy</h1>
+          <p class="policy-meta">How StayToned calculates targets, macros, and nutrition — and where the numbers are estimates.</p>
+
+          <p class="science-lead">
+            StayToned uses published nutrition equations for daily targets and deterministic arithmetic for every meal
+            total. Photo and description logging use AI to propose ingredients and amounts. Those proposals are starting
+            points you can edit. StayToned is not a medical device, and its values are not lab measurements or medical
+            advice.
+          </p>
+
+          <nav class="science-toc" aria-label="On this page">
+            <a href="#accuracy">Accuracy at a glance</a>
+            <a href="#targets">Daily calorie and macro targets</a>
+            <a href="#example">Worked example</a>
+            <a href="#ingredients">Nutrition per ingredient</a>
+            <a href="#ai">AI meal estimates</a>
+            <a href="#barcode">Barcode nutrition</a>
+            <a href="#nutrients">Micronutrients and daily guides</a>
+            <a href="#energy">Energy balance</a>
+            <a href="#limits">What this is not</a>
+            <a href="#sources">Sources</a>
+          </nav>
+
+          <div class="callout">
+            <p>
+              <strong>The short version</strong>
+              Targets follow Mifflin-St Jeor, standard activity multipliers, NIH-style calorie changes, Atwater 4-4-9
+              factors, and AMDR-inspired macro bounds. After an ingredient exists, scaling is exact: amount × nutrition
+              per 100&nbsp;g or 100&nbsp;ml. The uncertain step is identifying food and guessing portion size from a
+              photo or a sentence.
+            </p>
+          </div>
+
+          <h2 id="accuracy">Accuracy at a glance</h2>
+          <p>
+            Different parts of the app have different kinds of accuracy. Formula-based math is reproducible. AI vision
+            and crowd-sourced labels are not.
+          </p>
+
+          <div class="accuracy-grid">
+            <article class="accuracy-card accuracy-card-targets">
+              <h3>Daily targets</h3>
+              <p>
+                Deterministic. The same age, sex, height, weight, activity, goal, and plan always produce the same
+                calories and macros. Population equations typically sit within about 10% of measured resting energy for
+                many adults, with larger error in some bodies.
+              </p>
+            </article>
+            <article class="accuracy-card accuracy-card-totals">
+              <h3>Ingredient and meal totals</h3>
+              <p>
+                Deterministic once amounts and per-100 values exist. Change a quantity or a nutrient and StayToned
+                rescales locally. Meal totals are the sum of every active ingredient. Failed analyses add nothing.
+              </p>
+            </article>
+            <article class="accuracy-card accuracy-card-ai">
+              <h3>AI photo estimates</h3>
+              <p>
+                Estimates, not measurements. The model is asked to use the plate as a scale and to aim for roughly
+                ±50% on grams or milliliters. That is a prompt target, not a published validation study. Hidden oils,
+                sauces, and drinks are easy to miss.
+              </p>
+            </article>
+            <article class="accuracy-card accuracy-card-barcode">
+              <h3>Barcode scans</h3>
+              <p>
+                As accurate as the Open Food Facts record. Serving-size values are preferred; otherwise per-100&nbsp;g
+                values are scaled to the listed serving. If the product has no usable facts, AI estimates and the entry
+                is labeled as an estimate.
+              </p>
+            </article>
+          </div>
+
+          <h2 id="targets">Daily calorie and macro targets</h2>
+          <p>
+            Calculate targets asks for age, sex, height, weight, activity, goal, and a named macro plan. You can skip
+            the calculator and type your own calories and grams. Either way, a new snapshot applies from today forward.
+            Past days keep the targets they already had.
+          </p>
+
+          <h3>1. Resting burn (BMR)</h3>
+          <p>
+            StayToned uses the Mifflin-St Jeor equation, which is a widely used estimate of basal metabolic rate in
+            healthy adults (Mifflin et al., 1990):
+          </p>
+          <pre class="formula">BMR (kcal/day) = 10 × weight(kg) + 6.25 × height(cm) − 5 × age(years) + sex constant
+
+Sex constant:
+  male      +5
+  female    −161
+  intersex  −78   (midpoint of the two binary constants)</pre>
+          <p>
+            Mifflin-St Jeor was derived from measured resting energy in 498 adults. Later reviews often find it closer
+            to indirect calorimetry than older Harris-Benedict equations for many groups, with typical mean errors
+            around 10% and larger misses at the extremes of body size, age, or muscle mass. It does not measure your
+            metabolism. It estimates it from four inputs.
+          </p>
+
+          <h3>2. Daily burn (TDEE)</h3>
+          <p>
+            Total daily energy expenditure is BMR multiplied by a standard physical-activity factor, the same PAL
+            multipliers used by many clinical and consumer calculators:
+          </p>
+          <div class="table-wrap">
+            <table class="science-table">
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th>In the app</th>
+                  <th>Factor</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sedentary</td>
+                  <td>None</td>
+                  <td>1.2</td>
+                  <td>Little movement beyond everyday tasks</td>
+                </tr>
+                <tr>
+                  <td>Light</td>
+                  <td>Light</td>
+                  <td>1.375</td>
+                  <td>Light exercise or movement 1–3 days per week</td>
+                </tr>
+                <tr>
+                  <td>Moderate</td>
+                  <td>Moderate</td>
+                  <td>1.55</td>
+                  <td>Moderate training or sports 3–5 days per week</td>
+                </tr>
+                <tr>
+                  <td>Active</td>
+                  <td>Active</td>
+                  <td>1.725</td>
+                  <td>Exercise or sport 6–7 days per week</td>
+                </tr>
+                <tr>
+                  <td>Very active</td>
+                  <td>Very active</td>
+                  <td>1.9</td>
+                  <td>Intense training every day, or a physical job</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre class="formula">TDEE = BMR × activity factor</pre>
+          <p>
+            These factors are coarse. Two people with the same label can burn very different amounts. Wearable energy
+            from Apple Health or Health Connect can later replace this estimate on the energy-balance chart if you turn
+            health sync on.
+          </p>
+
+          <h3>3. Goal adjustment</h3>
+          <p>
+            Intake is TDEE plus a calorie change. Deficits follow NIH-style ranges used for unsupervised weight loss
+            (about 500–750 kcal/day for faster loss, smaller for slower loss) and never drop below conservative floors:
+            1,200 kcal for female profiles, 1,500 for male, and 1,350 for intersex. Surpluses stay modest so lean-gain
+            plans do not become large unstructured bulks.
+          </p>
+          <div class="table-wrap">
+            <table class="science-table">
+              <thead>
+                <tr>
+                  <th>Goal</th>
+                  <th>Adjustment</th>
+                  <th>Clamped range</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Lose weight fast</td>
+                  <td>−20% of TDEE</td>
+                  <td>−500 to −750 kcal, not below the calorie floor</td>
+                </tr>
+                <tr>
+                  <td>Lose weight slowly</td>
+                  <td>−10% of TDEE</td>
+                  <td>−250 to −500 kcal, not below the floor</td>
+                </tr>
+                <tr>
+                  <td>Maintain weight</td>
+                  <td>0</td>
+                  <td>Intake matches estimated burn</td>
+                </tr>
+                <tr>
+                  <td>Lean growth</td>
+                  <td>+5% of TDEE</td>
+                  <td>+100 to +250 kcal</td>
+                </tr>
+                <tr>
+                  <td>Build muscle</td>
+                  <td>+12% of TDEE</td>
+                  <td>+250 to +500 kcal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre class="formula">calorie target = round(TDEE + adjustment, nearest 10 kcal)</pre>
+          <p>
+            A 3,500 kcal change is a common rule of thumb for about 1&nbsp;lb of body fat. Real weekly change varies
+            with water, glycogen, and the mix of fat and lean tissue, so StayToned treats the calorie change as a plan,
+            not a guaranteed scale forecast.
+          </p>
+
+          <h3>4. Macro plans (Atwater factors)</h3>
+          <p>
+            Calories become grams with the Atwater factors used on nutrition labels worldwide: protein 4&nbsp;kcal/g,
+            carbohydrate 4&nbsp;kcal/g, fat 9&nbsp;kcal/g. Named plans use the same calorie splits as the public
+            calculator.net macro calculator, kept inside AMDR-inspired bounds from the U.S. Institute of Medicine:
+            protein about 10–35% of calories, fat 20–35%, carbohydrate at least 40% on the linked sliders.
+          </p>
+          <div class="table-wrap">
+            <table class="science-table">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Protein</th>
+                  <th>Carbs</th>
+                  <th>Fat</th>
+                  <th>Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Balanced</td>
+                  <td>25%</td>
+                  <td>50%</td>
+                  <td>25%</td>
+                  <td>Even protein and fat; carbs cover half of calories</td>
+                </tr>
+                <tr>
+                  <td>Low fat</td>
+                  <td>27.5%</td>
+                  <td>52.5%</td>
+                  <td>20%</td>
+                  <td>Fat at the AMDR floor; remaining calories go to carbs and protein</td>
+                </tr>
+                <tr>
+                  <td>Low carb</td>
+                  <td>30%</td>
+                  <td>40%</td>
+                  <td>30%</td>
+                  <td>Carbs at the app’s AMDR-inspired floor; higher protein and fat</td>
+                </tr>
+                <tr>
+                  <td>High protein</td>
+                  <td>35%</td>
+                  <td>42.5%</td>
+                  <td>22.5%</td>
+                  <td>Protein at the AMDR ceiling for satiety and muscle support</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre class="formula">protein g = round((calories × protein share) / 4, nearest 5 g)
+fat g      = round((calories × fat share) / 9, nearest 5 g)
+carbs g    = round((calories − protein×4 − fat×9) / 4, nearest 5 g)</pre>
+          <p>
+            Carbs are the remainder so the three macros still add up after rounding. Custom sliders keep calories fixed
+            while you move one macro; the other two rebalance inside those ranges. If you change the calorie slider,
+            grams scale in proportion to the current shares.
+          </p>
+          <p>
+            The IOM AMDR for carbohydrate is 45–65% of calories. StayToned’s low-carb plan uses 40% to match the
+            calculator.net split. That is a product convention, not a claim that 40% is the IOM lower bound.
+          </p>
+
+          <h2 id="example">Worked example</h2>
+          <p>
+            Profile: 30-year-old male, 180&nbsp;cm, 80&nbsp;kg, moderate activity, maintain, balanced plan.
+          </p>
+          <pre class="formula">BMR  = 10×80 + 6.25×180 − 5×30 + 5 = 1,780 kcal
+TDEE = 1,780 × 1.55 = 2,759 kcal
+Calories = round(2,759, 10) = 2,760 kcal
+
+Protein = round((2,760 × 0.25) / 4, 5) = 175 g
+Fat     = round((2,760 × 0.25) / 9, 5) = 75 g
+Carbs   = round((2,760 − 700 − 675) / 4, 5) = 345 g</pre>
+          <p>
+            Same calories on High Protein become 240&nbsp;g protein, 295&nbsp;g carbs, and 70&nbsp;g fat. Same calories
+            on Low Carb become 205 / 285 / 90. You can still type any custom split the sliders allow.
+          </p>
+
+          <h2 id="ingredients">Nutrition per ingredient</h2>
+          <p>
+            Every ingredient stores two layers: how much you ate, and nutrition per a canonical reference amount.
+            StayToned does not store a frozen meal total as the source of truth. It stores per-item densities and
+            recomputes.
+          </p>
+
+          <h3>Canonical densities</h3>
+          <p>
+            AI and in-app nutrition use a per-100 schema. Solids use grams. Liquids use milliliters. Values are never
+            stored “per serving” or “per shot” in that density field — a 30&nbsp;ml espresso shot still stores calories
+            per 100&nbsp;ml, then the 30&nbsp;ml portion scales it.
+          </p>
+          <pre class="formula">scale = amount_in_g_or_ml / 100
+item calories = calories_per_100 × scale
+item protein  = protein_g_per_100 × scale
+item carbs    = carbs_g_per_100 × scale
+item fat      = fat_g_per_100 × scale
+item nutrient = nutrient_per_100 × scale</pre>
+          <p>
+            Macros on the meal round to 2 decimal places. Extra nutrients round to 4. Household units (cup, tbsp, slice,
+            serving) convert to grams or milliliters with fixed factors before scaling:
+          </p>
+          <div class="table-wrap">
+            <table class="science-table">
+              <thead>
+                <tr>
+                  <th>Unit</th>
+                  <th>Canonical amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1 oz</td>
+                  <td>28.3495 g</td>
+                </tr>
+                <tr>
+                  <td>1 lb</td>
+                  <td>453.59237 g</td>
+                </tr>
+                <tr>
+                  <td>1 fl oz</td>
+                  <td>29.5735 ml</td>
+                </tr>
+                <tr>
+                  <td>1 cup</td>
+                  <td>236.588 ml</td>
+                </tr>
+                <tr>
+                  <td>1 tbsp</td>
+                  <td>14.7868 ml</td>
+                </tr>
+                <tr>
+                  <td>1 tsp</td>
+                  <td>4.92892 ml</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Count units (piece, slice, serving, package) need a gram or milliliter equivalent from analysis or from you.
+            Two slices of bread with a 60&nbsp;g equivalent become 60&nbsp;g × the per-100 density.
+          </p>
+
+          <h3>Meal totals</h3>
+          <p>
+            A meal’s macros and nutrients are the sum of every ingredient that is not deleted and not a failed-analysis
+            placeholder. Edit a quantity, swap a unit, or fix a nutrient and the meal updates immediately — no second
+            AI call. Manual entries use the same math.
+          </p>
+          <pre class="formula">meal protein = Σ ingredient protein
+meal carbs   = Σ ingredient carbs
+meal fat     = Σ ingredient fat
+meal kcal    = Σ ingredient calories
+meal fiber   = Σ ingredient dietary_fiber_g
+…same sum for every other tracked nutrient</pre>
+
+          <h3>What each item can carry</h3>
+          <p>
+            Core macros on every item: calories, fat, carbohydrate, protein. Extended facts, when known:
+            saturated / trans / polyunsaturated / monounsaturated fat, omega-3, cholesterol, sodium, dietary fiber,
+            sugars, added sugars, total sugars, calcium, iron, potassium, magnesium, phosphorus, zinc, copper,
+            manganese, selenium, chromium, molybdenum, iodine, vitamins A, C, D, E, K, thiamin, riboflavin, niacin,
+            B6, folate, B12, biotin, and pantothenic acid.
+          </p>
+          <p>
+            Daily summaries highlight fiber and sugars next to macros. Trends can chart any of these over weeks, months,
+            or a year. Missing values stay missing; StayToned does not invent a vitamin because a calorie was estimated.
+          </p>
+
+          <h2 id="ai">AI meal estimates</h2>
+          <p>
+            Photo, description, and “add ingredient” flows ask a language model to return a structured ingredient list:
+            name, quantity, display unit, normalized grams or milliliters, macros per 100, and nutrition facts per 100
+            when it can estimate them. The app then runs the scaling math above.
+          </p>
+          <ul>
+            <li>
+              <strong>Photos with food.</strong> The model is told to use the plate or bowl as a scale and to compare
+              each item to that diameter. The requested accuracy on amounts is roughly ±50%. Hidden structural
+              ingredients (a burger patty between buns) may be included. Optional toppings that are not visible should
+              not be invented.
+            </li>
+            <li>
+              <strong>Photos of menus, labels, or packaging.</strong> Readable food text counts. Printed label or menu
+              numbers are preferred over a visual guess. Per-serving labels are converted into the per-100 schema.
+            </li>
+            <li>
+              <strong>Text descriptions.</strong> If you omit amounts, the model uses a typical adult serving, or a
+              serving sized to your age, sex, height, and weight when that profile exists. All of that is still a guess.
+            </li>
+            <li>
+              <strong>Composite dishes.</strong> Meals are split into mutually exclusive ingredients when possible
+              (bun, patty, cheese — not a single “burger”), so you can correct one item without discarding the rest.
+            </li>
+          </ul>
+          <div class="callout callout-warn">
+            <p>
+              <strong>Treat AI numbers as a first draft</strong>
+              StayToned has not published a lab study that compares photo estimates to weighed food. Independent
+              research on image-based diet tools often finds food identity is easier than portion size, with gram
+              errors commonly in the tens of percent. Oils, dressings, cooking fat, beverages, and mixed restaurant
+              dishes are the usual failure modes. Edit anything that looks wrong.
+            </p>
+          </div>
+
+          <h2 id="barcode">Barcode nutrition</h2>
+          <p>
+            Scans look up the product on
+            <a href="https://world.openfoodfacts.org" rel="noopener noreferrer">Open Food Facts</a>, a public, crowd-sourced food database.
+            StayToned prefers per-serving nutrients when they exist. If only per-100&nbsp;g values exist, it scales
+            them by the listed serving quantity. Energy in kilojoules is converted with 1&nbsp;kcal = 4.184&nbsp;kJ.
+            If calories are missing but macros exist, calories are rebuilt with the Atwater 4-4-9 sum. Salt in grams
+            can fill sodium as 400&nbsp;mg sodium per 1&nbsp;g salt (the usual 40% sodium-by-mass conversion).
+          </p>
+          <p>
+            Open Food Facts records vary in completeness and can disagree with the package in your hand. If a scan has
+            no usable nutrition, StayToned falls back to an AI estimate and labels it as an estimate, not verified
+            label data.
+          </p>
+
+          <h2 id="nutrients">Micronutrients and daily guides</h2>
+          <p>
+            When you open a nutrient, StayToned can show a daily guide from U.S. Dietary Reference Intakes and Dietary
+            Guidelines rules, using your age, sex, and calorie target when those are known. Adults without a profile
+            fall back to a 19-year-old, 2,000&nbsp;kcal default.
+          </p>
+          <div class="table-wrap">
+            <table class="science-table">
+              <thead>
+                <tr>
+                  <th>Nutrient</th>
+                  <th>Guide in the app</th>
+                  <th>Basis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dietary fiber</td>
+                  <td>At least 14&nbsp;g per 1,000&nbsp;kcal</td>
+                  <td>IOM adequate intake</td>
+                </tr>
+                <tr>
+                  <td>Added sugars</td>
+                  <td>Limit to 10% of calories</td>
+                  <td>Dietary Guidelines for Americans</td>
+                </tr>
+                <tr>
+                  <td>Saturated fat</td>
+                  <td>Limit to 10% of calories</td>
+                  <td>Dietary Guidelines for Americans</td>
+                </tr>
+                <tr>
+                  <td>Trans fat</td>
+                  <td>Limit to 0&nbsp;g</td>
+                  <td>Dietary Guidelines / WHO direction</td>
+                </tr>
+                <tr>
+                  <td>Sodium</td>
+                  <td>Limit 2,300&nbsp;mg for ages 14+ (lower for children)</td>
+                  <td>Dietary Guidelines</td>
+                </tr>
+                <tr>
+                  <td>Cholesterol</td>
+                  <td>Limit 300&nbsp;mg</td>
+                  <td>Older DGA ceiling, kept as a conservative cap</td>
+                </tr>
+                <tr>
+                  <td>Vitamins and minerals</td>
+                  <td>Age- and sex-specific RDA or AI values</td>
+                  <td>IOM DRI tables (NIH ODS)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            These guides are population averages. Pregnancy, disease, medication, and clinical diets can need different
+            targets. StayToned does not diagnose deficiency from a food log.
+          </p>
+
+          <h2 id="energy">Energy balance</h2>
+          <p>
+            When you calculate targets, estimated daily burn is stored as that TDEE, and the goal’s calorie change is
+            stored beside it. The Trends energy chart can then show intake versus that plan.
+          </p>
+          <p>
+            If you connect Apple Health or Health Connect, burned energy for a day is the sum of the active and resting
+            calories you allowed. That measured (or wearable-estimated) burn can differ a lot from Mifflin-St Jeor ×
+            PAL. Wearable totals are themselves models, not whole-room calorimetry.
+          </p>
+          <pre class="formula">balance = intake − burned
+plan balance ≈ calorie change (for example −500 kcal on a cut)</pre>
+
+          <h2 id="limits">What this is not</h2>
+          <ul>
+            <li>Not a medical device, diagnosis, or treatment plan.</li>
+            <li>Not a substitute for a dietitian, physician, or weighed-food protocol.</li>
+            <li>Not a claim that AI photos match a lab or a restaurant nutrition panel.</li>
+            <li>Not a guarantee of weight change. Water, sodium, training, and adherence move the scale more than a 10&nbsp;kcal rounding step.</li>
+          </ul>
+          <p>
+            The honest accuracy model is: published equations for the plan, exact arithmetic for the log, and human
+            judgment for every estimate. The more you confirm portions — a label, a barcode, a kitchen scale, an edit —
+            the closer the diary gets to the food you actually ate.
+          </p>
+
+          <h2 id="sources">Sources</h2>
+          <ul class="science-sources">
+            <li>
+              Mifflin MD, St Jeor ST, Hill LA, Scott BJ, Daugherty SA, Koh YO. A new predictive equation for resting
+              energy expenditure in healthy individuals. <em>Am J Clin Nutr.</em> 1990;51(2):241-247.
+            </li>
+            <li>
+              Institute of Medicine. <em>Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids,
+              Cholesterol, Protein, and Amino Acids.</em> National Academies Press; 2005. Acceptable Macronutrient
+              Distribution Ranges and 14&nbsp;g fiber / 1,000&nbsp;kcal.
+            </li>
+            <li>
+              National Academies / NIH Office of Dietary Supplements. Vitamin and mineral RDA and AI values used for
+              in-app nutrient guides.
+            </li>
+            <li>
+              U.S. Department of Agriculture and U.S. Department of Health and Human Services.
+              <em>Dietary Guidelines for Americans, 2020–2025.</em> Limits on added sugars, saturated fat, and sodium.
+            </li>
+            <li>
+              National Institutes of Health, NIDDK. Healthy weight-loss guidance using about 500–750&nbsp;kcal/day
+              deficits and conservative calorie floors for unsupervised diets.
+            </li>
+            <li>
+              Atwater WO. Food energy factors (4&nbsp;kcal/g protein, 4&nbsp;kcal/g carbohydrate, 9&nbsp;kcal/g fat)
+              that underpin nutrition-label calories.
+            </li>
+            <li>
+              Open Food Facts. Crowd-sourced packaged-food nutrition used for barcode lookups.
+            </li>
+          </ul>
+          <p>
+            Questions about this report? <a href="../contact/">Contact StayToned</a> or email
+            <a href="mailto:me@farnood.tech">me@farnood.tech</a>.
+          </p>
+        </article>
+      </main>
+
+      <footer class="site-footer">
+        <p>
+          Nutrition estimates are editable and should not be treated as medical measurements.
+          <br />
+          <a href="../">Back to StayToned</a>
+        </p>
+        <nav class="site-legal-links" aria-label="Legal">
+          <a href="./">Science</a>
+          <span aria-hidden="true">·</span>
+          <a href="../terms/">Terms of Use</a>
+          <span aria-hidden="true">·</span>
+          <a href="../policy/">Privacy Policy</a>
+          <span aria-hidden="true">·</span>
+          <a href="../contact/">Contact</a>
+          <span aria-hidden="true">·</span>
+          <a href="mailto:me@farnood.tech?subject=StayToned%20Restore%20Purchases">Restore Purchases</a>
+        </nav>
+      </footer>
+    </div>
+  </body>
+</html>

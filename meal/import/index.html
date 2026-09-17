@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Shared Meal - StayToned</title>
+    <link rel="icon" href="/assets/images/icon-glyph.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/theme.js"></script>
+    <style>
+      .share-import {
+        align-items: center;
+        display: flex;
+        min-height: 100vh;
+        padding: 32px 20px;
+      }
+
+      .share-import__panel {
+        margin: 0 auto;
+        max-width: 520px;
+        text-align: center;
+      }
+
+      .share-import__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="share-import">
+      <section class="share-import__panel">
+        <p class="eyebrow">Shared meal</p>
+        <h1>Opening StayToned</h1>
+        <p class="lede">
+          If StayToned does not open automatically, use the button below from this device.
+        </p>
+        <div class="share-import__actions">
+          <a class="button button-primary" id="open-app-link" href="staytoned://meal/import">Open in StayToned</a>
+          <a class="button button-secondary" href="/">About StayToned</a>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var token = params.get('token');
+        var appUrl = token
+          ? 'staytoned://meal/import?token=' + encodeURIComponent(token)
+          : 'staytoned://meal/import';
+        var openLink = document.getElementById('open-app-link');
+
+        openLink.setAttribute('href', appUrl);
+        window.setTimeout(function () {
+          window.location.href = appUrl;
+        }, 100);
+      })();
+    </script>
+  </body>
+</html>

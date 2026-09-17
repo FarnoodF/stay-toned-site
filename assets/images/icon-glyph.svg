@@ -1,0 +1,53 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 260 260"
+  role="img"
+  aria-label="StayToned"
+  shape-rendering="geometricPrecision"
+>
+  <defs>
+    <linearGradient id="red" x1="39" y1="21" x2="223" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF5A50" />
+      <stop offset="1" stop-color="#E01D3B" />
+    </linearGradient>
+    <linearGradient id="orange" x1="72" y1="47" x2="176" y2="222" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB020" />
+      <stop offset="1" stop-color="#E07800" />
+    </linearGradient>
+    <linearGradient id="green" x1="83" y1="67" x2="204" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#43DC66" />
+      <stop offset="1" stop-color="#189A3C" />
+    </linearGradient>
+    <linearGradient id="blue" x1="88" y1="92" x2="176" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4DA3FF" />
+      <stop offset="1" stop-color="#0059D6" />
+    </linearGradient>
+    <linearGradient id="gloss" x1="52" y1="34" x2="196" y2="214" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.5" />
+      <stop offset="0.38" stop-color="#FFFFFF" stop-opacity="0.07" />
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+    <filter id="lift" x="-20%" y="-20%" width="140%" height="145%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="2.4" stdDeviation="2.6" flood-color="#12213D" flood-opacity="0.16" />
+    </filter>
+  </defs>
+
+  <g fill="none" stroke-width="16" filter="url(#lift)">
+    <circle cx="130" cy="130" r="120" stroke="url(#red)" />
+    <circle cx="130" cy="130" r="97" stroke="url(#orange)" />
+    <circle cx="130" cy="130" r="74" stroke="url(#green)" />
+  </g>
+
+  <g fill="none" stroke="url(#gloss)" stroke-width="5">
+    <circle cx="130" cy="130" r="125" />
+    <circle cx="130" cy="130" r="102" />
+    <circle cx="130" cy="130" r="79" />
+  </g>
+
+  <path
+    d="M 95 106 H 165 Q 169 106 169 110 V 118 Q 169 122 165 122 H 141 V 175 Q 141 180 136 180 H 124 Q 119 180 119 175 V 122 H 95 Q 91 122 91 118 V 110 Q 91 106 95 106 Z"
+    fill="url(#blue)"
+    transform="translate(-13 -18.3) scale(1.1)"
+    filter="url(#lift)"
+  />
+</svg>
