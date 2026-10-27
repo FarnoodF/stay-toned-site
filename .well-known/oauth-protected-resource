@@ -1,0 +1,1 @@
+{"resource":"https://huciipsclogxejqredux.supabase.co/functions/v1/staytoned-mcp","authorization_servers":["https://staytoned.farnood.tech"],"scopes_supported":["mcp.read"],"bearer_methods_supported":["header"]}
