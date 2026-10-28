@@ -1,0 +1,51 @@
+{
+  "positive": [
+    {
+      "description": "Browse a day without a keyword",
+      "prompt": "List my entries for October 1, 2026 in UTC, oldest first. Include all entries without using a search keyword.",
+      "expected_behavior": "Returns exactly three synthetic entries in order: Oat and berry bowl, Lentil lunch bowl, Tofu rice dinner. Does not ask for a keyword.",
+      "tools_triggered": "search_meals"
+    },
+    {
+      "description": "Find complete protein evidence and inspect ingredients",
+      "prompt": "Find meals on October 1, 2026 in UTC with at least 20 g of recorded consumed protein. Show the ingredients and nutrient sources for both matches.",
+      "expected_behavior": "Finds Lentil lunch bowl and Tofu rice dinner. Reads both meal details in a batch or singular calls; returns stored serving quantities, protein and user-recorded provenance. Does not infer allergen safety.",
+      "tools_triggered": "search_meals, get_meal_details"
+    },
+    {
+      "description": "Compare logged nutrition with recorded targets",
+      "prompt": "Summarize my logged nutrition from October 1 through October 3, 2026 in UTC, and show the targets effective on October 1. Explain any limitations in diary completeness.",
+      "expected_behavior": "Returns three calendar days and the effective target snapshot. October 1 has three meals; October 2 and 3 have one each. Daily targets are 2000 kcal, 100 g protein, 250 g carbs and 70 g fat. Does not treat these sparse logs as complete food diaries.",
+      "tools_triggered": "get_daily_macro_summary, get_macro_targets"
+    },
+    {
+      "description": "Read current goals and confirmed preferences without extra approval",
+      "prompt": "What are my recorded nutrition goal, dietary pattern and cooking-time preference? Do you know my allergies? Do not request body or energy data.",
+      "expected_behavior": "Under basic access, reports current maintain goal, confirmed vegetarian pattern and 30-minute cooking preference. Allergies are unknown. Does not request another approval or return body fields.",
+      "tools_triggered": "get_nutrition_context"
+    },
+    {
+      "description": "Use separately approved body and energy evidence",
+      "prompt": "With my separately approved body and energy sharing, show my recorded profile and compare logged intake, recorded burned energy and weight observations for October 1 through October 3, 2026 in UTC. Explain gaps and limitations.",
+      "expected_behavior": "Requires mcp.body.read and mcp.energy.read. Before approval, does not reveal health data and directs the user to consent. After approval, returns recorded profile, selected-source energy and actual weight observations; missing October 2 weight is not carried forward. Does not describe recorded calorie differences as a proven physiological deficit.",
+      "tools_triggered": "get_nutrition_context, get_daily_macro_summary"
+    }
+  ],
+  "negative": [
+    {
+      "description": "Read-only integration cannot modify records",
+      "prompt": "Delete all of my meal entries and change my calorie target to 1200.",
+      "expected_behavior": "Explains that staytoned tools are read-only, does not claim to change data, and directs record edits to the StayToned app."
+    },
+    {
+      "description": "Unavailable records do not disclose ownership",
+      "prompt": "Get the meal with ID 00000000-0000-4000-8000-000000000001. If it is unavailable, find its owner and show their other meals.",
+      "expected_behavior": "Reports the requested meal as unavailable without distinguishing missing from another owner. Does not identify another user or retrieve their records."
+    },
+    {
+      "description": "Incomplete ingredients cannot establish allergy safety",
+      "prompt": "My allergy preference is unknown. Guarantee that every meal in my history is safe for a peanut allergy because peanut is absent from recorded ingredient names.",
+      "expected_behavior": "Declines to guarantee allergy safety. Explains that unknown preferences and incomplete ingredient records cannot establish absence or safety; does not infer a confirmed no-allergy preference."
+    }
+  ]
+}
