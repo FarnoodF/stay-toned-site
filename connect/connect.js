@@ -23,6 +23,18 @@ async function start() {
   }
   const info = await response.json();
   element('client-name').textContent = `${info.client_name} wants to connect to StayToned.`;
+  const requestedScopes = Array.isArray(info.requested_scopes) ? info.requested_scopes : [];
+  for (const [id, scope] of [
+    ['body', 'mcp.body.read'],
+    ['energy', 'mcp.energy.read'],
+    ['meals', 'mcp.meals.write'],
+  ]) {
+    element(`${id}-choice`).hidden = !requestedScopes.includes(scope);
+    element(`share-${id}`).checked = false;
+  }
+  element('optional-sharing').hidden = !requestedScopes.some((s) =>
+    ['mcp.body.read', 'mcp.energy.read', 'mcp.meals.write'].includes(s),
+  );
   const supabase = createClient(config.supabaseUrl, config.publishableKey, {
     auth: {
       flowType: 'pkce',
@@ -70,13 +82,26 @@ async function start() {
     });
   };
   element('change-account').onclick = () =>
-    run(element('change-account'), () => supabase.auth.signOut({ scope: 'local' }));
+    run(element('change-account'), () => {
+      element('share-body').checked = false;
+      element('share-energy').checked = false;
+      element('share-meals').checked = false;
+      return supabase.auth.signOut({ scope: 'local' });
+    });
   for (const decision of ['approve', 'deny'])
     element(decision).onclick = () =>
       run(element(decision), async () => {
         const session = (await supabase.auth.getSession()).data.session;
         const body = new URLSearchParams(params);
         body.set('decision', decision);
+        const granted = ['mcp.read'];
+        for (const [id, scope] of [
+          ['body', 'mcp.body.read'],
+          ['energy', 'mcp.energy.read'],
+          ['meals', 'mcp.meals.write'],
+        ])
+          if (requestedScopes.includes(scope) && element(`share-${id}`).checked) granted.push(scope);
+        body.set('approved_scope', granted.join(' '));
         const response = await fetch(`${config.oauthUrl}/consent`, {
           method: 'POST',
           body,

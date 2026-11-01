@@ -20,8 +20,8 @@
       <p><strong>Read your meals, targets and planning context</strong></p>
       <p>
         This connection can read meal history, ingredients, nutrition targets, recorded goals and confirmed dietary
-        preferences. It cannot change your data or access photos or billing. Body and energy sharing are optional and
-        require your choice below.
+        preferences. Creating meals and sharing body or energy data require your choices below. This connection cannot
+        edit or delete existing meals, read stored photos, or access billing.
       </p>
       <p>
         Nutrition values are editable estimates, not medical advice. You can revoke access in StayToned → Settings →
@@ -41,7 +41,11 @@
       <section id="consent" hidden aria-label="Assistant access">
         <p id="account"></p>
         <fieldset id="optional-sharing" hidden>
-          <legend>Optional sharing</legend>
+          <legend>Optional permissions</legend>
+          <label id="meals-choice" class="choice" hidden
+            ><input id="share-meals" type="checkbox" />
+            <span>Create meals from descriptions, photos you provide, or manual nutrition values</span></label
+          >
           <label id="body-choice" class="choice" hidden
             ><input id="share-body" type="checkbox" /> <span>Share body measurements and weight history</span></label
           >
@@ -49,9 +53,9 @@
             ><input id="share-energy" type="checkbox" />
             <span>Share recorded energy from your selected health source</span></label
           >
-          <p>You can connect without selecting either. Phone health permissions do not enable assistant sharing.</p>
+          <p>You can connect without selecting any. Phone health permissions do not enable assistant sharing.</p>
         </fieldset>
-        <button id="approve" type="button">Allow read-only access</button>
+        <button id="approve" type="button">Allow selected access</button>
         <button id="change-account" type="button">Use another account</button>
       </section>
       <button id="deny" type="button" hidden>Don't allow</button>
