@@ -232,6 +232,7 @@ svg {
 }
 
 .hero-shot img {
+  height: auto;
   border: 1px solid var(--border);
   border-radius: 32px 32px 0 0;
   box-shadow: var(--shadow);
@@ -390,6 +391,12 @@ svg {
   }
 }
 
+@media (min-width: 1024px) {
+  .screens {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .screen-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -400,6 +407,7 @@ svg {
 }
 
 .screen-card img {
+  height: auto;
   border: 1px solid var(--border);
   border-bottom: none;
   border-radius: 18px 18px 0 0;
