@@ -222,28 +222,31 @@ svg {
 @media (min-width: 768px) {
   .hero-card-split {
     grid-template-columns: 1fr 300px;
-    padding: 44px 40px 0;
+    padding: 32px 40px;
   }
 }
 
 .hero-shot {
   display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.hero-shot img {
-  height: auto;
-  border: 1px solid var(--border);
-  border-radius: 32px 32px 0 0;
-  box-shadow: var(--shadow);
-  margin-bottom: -1px;
-  max-width: 280px;
+.hero-shot img,
+.screen-card img {
   width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero-shot img {
+  max-width: 176px;
+  box-shadow: var(--shadow);
 }
 
 @media (max-width: 767px) {
-  .hero-card-split {
-    padding-bottom: 0;
+  .hero-shot img {
+    max-width: 152px;
   }
 }
 
@@ -404,14 +407,33 @@ svg {
   margin: 0;
   overflow: hidden;
   padding: 14px 14px 0;
+  position: relative;
+}
+
+.screen-card:focus-within {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+:where(.screen-card a) {
+  display: block;
+}
+
+.screen-card a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  cursor: zoom-in;
+}
+
+.screen-card:hover figcaption,
+.screen-card:focus-within figcaption {
+  text-decoration: underline;
 }
 
 .screen-card img {
-  height: auto;
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 18px 18px 0 0;
-  width: 100%;
+  max-width: 144px;
+  margin-inline: auto;
 }
 
 .screen-card figcaption {
